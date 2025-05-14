@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        <nav>
+            <img src="{% static 'LogoFerromax.png' %}" alt="LogoFerromax" id="logo">
+            <ul>
+                <li><a href="{% url 'catalogo' %}" id="lista">Inicio</a></li>
+                <li><a href="{% url 'Menu' %}" id="lista">Menu</a></li>
+                <li><a href="Carrito.html" id="lista">Carrito</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" placeholder="Buscar...">
+                <button type="submit">Buscar</button>
+            </div>
+        </nav>
+    </header><br><br><br><br>
+        <form method="get" action="{% url 'FiltroProductos' %}">
+    <label for="categoria">Filtrar por categoría:</label>
+    <select name="categoria" id="categoria">
+        <option value="">Todas</option>
+        <option value="0">EPP</option>
+        <option value="1">Herramientas</option>
+        <option value="2">Materiales básicos</option>
+    </select>
+    <button type="submit">Filtrar</button>
+    <h1 id="tituloPro">Productos</h1>
+    <div class="container" id="productos">
+        <div class="row">
+          {% for p in productos %}
+            <div class="col-md-4">
+                <div class="card" id="tarjeta">
+                  {% if p.imagen %}
+                    <img src="{{p.imagen.url}}" class="card-img-top" alt="{{p.nombre_producto}}">
+                  {% endif %}
+                    <div class="card-body">
+                      <h3 class="card-title">{{ p.nombre_producto }}</h3>
+                      <p class="card-text">Precio: ${{p.precio}}</p>
+                      <p class="card-text">Stock: {{p.stock}}</p>
+                      <a href="#" class="btn btn-primary">Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+      </div>
+</form>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        <nav>
+            <img src="{% static 'LogoFerromax.png' %}" alt="LogoFerromax" id="logo">
+            <ul>
+                <li><a href="{% url 'catalogo' %}" id="lista">Inicio</a></li>
+                <li><a href="{% url 'ListaProductos' %}" id="lista">Productos</a></li>
+                <li><a href="Carrito.html" id="lista">Carrito</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" placeholder="Buscar...">
+                <button type="submit">Buscar</button>
+            </div>
+        </nav>
+    </header><br><br>
+
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="https://rgm.vtexassets.com/arquivos/ids/156235/Martillo.png?v=638554617786370000" class="d-block w-100" alt="..." id="herramienta">
+          </div>
+          <div class="carousel-item">
+            <img src="https://easycl.vteximg.com.br/arquivos/ids/5046556/195733-0000-001.jpg?v=638743251653430000" class="d-block w-100" alt="..." id="herramienta">
+          </div>
+          <div class="carousel-item">
+            <img src="https://rhona.cl/uploads/2020/04/20200423180024-producto-destornillador-de-cruz_1-800x515.jpg" class="d-block w-100" alt="..." id="herramienta">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>        
+    </div>
+
+
+    <h3 id="tituloPro">Productos</h3>
+    <div class="container" id="productos">
+        <div class="row">
+          {% for p in productos %}
+            <div class="col-md-4">
+                <div class="card" id="tarjeta">
+                  {% if p.imagen %}
+                    <img src="{{p.imagen.url}}" class="card-img-top" alt="{{p.nombre_producto}}">
+                  {% endif %}
+                    <div class="card-body">
+                      <h3 class="card-title">{{ p.nombre_producto }}</h3>
+                      <p class="card-text">Precio: ${{p.precio}}</p>
+                      <p class="card-text">Stock: {{p.stock}}</p>
+                      <a href="#" class="btn btn-primary">Agregar al carrito</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+      </div>
+</body>
+</html>
