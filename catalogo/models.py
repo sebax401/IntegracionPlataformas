@@ -38,9 +38,9 @@ class Producto(models.Model):
         (16, 'pintura'),
     ])
     categoria = models.IntegerField(default=0, choices=[
-        (0, 'epp'),
-        (1, 'herramientas'),
-        (2, 'materiales basicos')
+        (1, 'epp'),
+        (2, 'herramientas'),
+        (3, 'materiales basicos')
     ])
     stock = models.IntegerField(default=0)
 
