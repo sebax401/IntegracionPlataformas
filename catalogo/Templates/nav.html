@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <nav>
+            <img src="{% static 'LogoFerromax.png' %}" alt="LogoFerromax" id="logo">
+            <ul>
+              {% if user.is_authenticated %}
+                <li id="lista">{{user.username}}</li>
+                <li><a href="{% url 'logout' %}" id="lista">Cerrar Sesion</a></li>
+              {% else %}
+                <li><a href="{% url 'login' %}" id="lista">Inicio</a></li>
+              {% endif %}
+              {% if user.email|lower|slice:'-12:' == "@ferromax.cl" %}
+                <li>
+                  <a href="{% url 'agregar_stock' %}" id="lista">Agregar Stock</a>
+                </li>
+              {% endif %}
+                <li><a href="{% url 'ListaProductos' %}" id="lista">Productos</a></li>
+                <li><a href="{% url 'carrito' %}" id="lista">Carrito</a></li>
+                <li><a href="{% url 'Menu' %}" id="lista">Menu</a></li>
+            </ul>
+            <div class="search-container">
+                <form method="get" action="{% url 'FiltroProductos' %}">
+                    <input type="text" name="nombre" placeholder="Buscar..." value="{{ request.GET.nombre }}" id="search-input">
+                    <button type="submit">Buscar</button>
+                </form>
+            </div>
+        </nav>
+</body>
+</html>

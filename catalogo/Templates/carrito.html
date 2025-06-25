@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+     <script src="https://www.paypal.com/sdk/js?client-id=AR8LOj_kpDI0hAiC8s84dHy_LdkPZ-4c0eUYAKouv3KUXtNko5ZDl-DR9vuUa9Etp4_5AyCbRPonS6qa"></script>
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        {% include 'nav.html' %}
+    </header><br><br><br><br>
+
+    <h3 id="tituloPro">Ingrese dirrecion</h3>
+
+    <div class="container" id="FormularioDireccion">
+        <form method="post" action="{% url 'pago_exitoso' %}">
+            {% csrf_token %}
+                <label for="nombre" class="form-label">Nombre del destinatario:</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                <label for="telefono" class="form-label">Teléfono de contacto:</label>
+                <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                <label for="email" class="form-label">Correo electrónico:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <label for="ciudad" class="form-label">Ciudad:</label>
+                <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+                <label for="provincia" class="form-label">Provincia:</label>
+                <input type="text" class="form-control" id="provincia" name="provincia" required>
+                <label for="direccion" class="form-label">Dirección:</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" required>
+        </form>
+    </div>
+    <h3 id="tituloPro">Carrito de Compras</h3>
+    <div class="container" id="productos">
+       {% if request.session.carrito %}
+        <div class="row">
+            {% for key, item in request.session.carrito.items %}
+                <div class="col-md-4">
+                    <div class="card" id="card">
+                        <img src="{{ item.imagen }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.nombre }}</h5>
+                            <p class="card-text">Precio: ${{ item.precio|floatformat:2 }}</p>
+                            <p class="card-text">Cantidad: {{ item.cantidad }}</p>
+                            {% if item.cantidad < item.stock %}
+                                <a href="{% url 'sumar' key %}" class="btn btn-primary" id="porte">+</a><br>
+                            {% else %}
+                                <a href="#" class="btn btn-secondary disabled" id="porte">Agotado</a><br>
+                            {% endif %}
+                            <a href="{% url 'restar' key %}" class="btn btn-dark" id="porte">-</a><br>
+                            <a href="{% url 'eliminar' key %}" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if total > 0 %}
+        <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><h3>Total: ${{ total }}</h3></h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Formas de Pago:</h6>
+            <div id="paypal-button-container" id="direccion"></div>
+        </div>
+        </div>
+        <div id="paypal-button-container" ></div>
+        {% else %}
+            <h3>Total: ${{total}}</h3>
+        {% endif %}
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No hay productos en el carrito.
+                </div>
+        {% endif %}
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Ferremas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+<script>
+    // Función para validar si la dirección está completa
+    function isDireccionValida() {
+        const direccion = document.getElementById('direccion').value.trim();
+        return direccion.length > 0;
+    }
+
+    paypal.Buttons({
+        onInit: function(data, actions) {
+            // Deshabilita el botón al inicio si la dirección está vacía
+            if (!isDireccionValida()) {
+                actions.disable();
+            }
+
+            // Escucha cambios en el campo dirección
+            document.getElementById('direccion').addEventListener('input', function() {
+                if (isDireccionValida()) {
+                    actions.enable();
+                } else {
+                    actions.disable();
+                }
+            });
+        },
+        onClick: function(data, actions) {
+            // Valida nuevamente antes de continuar
+            if (!isDireccionValida()) {
+                alert('Por favor, ingresa una dirección antes de continuar con el pago.');
+                return actions.reject();
+            }
+            return actions.resolve();
+        },
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ total }}'
+                    },
+                    description: '{{ item.nombre }}'
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                let payerName = details.payer.name.given_name;
+                window.location.href = "{% url 'pago_exitoso' %}" + "?payerName=" + encodeURIComponent(payerName);
+            });
+        },
+        onCancel: function(data) {
+            console.log('Pago cancelado', data);
+        },
+        onError: function(err) {
+            console.error('Error en el pago', err);
+        }
+    }).render('#paypal-button-container');
+</script>
+</body>
+</html>

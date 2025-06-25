@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        {% include 'nav.html' %}
+    </header><br><br><br><br>
+    <h1>Agregar Stock</h1>
+    <form method="POST" action="{% url 'agregar_stock' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <pre>Nombre Producto <br><input type="text" name="nombre_producto"></pre>
+        <pre>Precio <br><input type="number" name="precio"></pre>
+        <pre>Descripcion <br><input type="text" name="descripcion"></pre>
+        <pre>Tipo <br><select name="tipo" id="tipo">
+            <option value="0">casco</option>
+            <option value="1">guantes</option>
+            <option value="2">lentes</option>
+            <option value="3">destornillador</option>
+            <option value="4">kit de herramientas</option>
+            <option value="5">lijadora</option>
+            <option value="6">llaves</option>
+            <option value="7">martillo</option>
+            <option value="8">sierra</option>
+            <option value="9">taladro</option>
+            <option value="10">acabados de piso</option>
+            <option value="11">arena</option>
+            <option value="12">barnices</option>
+            <option value="13">cemento</option>
+            <option value="14">ceramica</option>
+            <option value="15">ladrillos</option>
+            <option value="16">pintura</option>
+            </select>
+        </pre>
+        <pre>Categoria     <br><select name="categoria" id="categoria">
+                                <option value="">Todas</option>
+                                <option value="1">EPP</option>
+                                <option value="2">Herramientas</option>
+                                <option value="3">Materiales básicos</option>
+                            </select>
+        </pre>
+        <pre>Imagen <br><input type="file" name="imagen"></pre>
+        <pre>Stock <br><input type="number" name="stock"></pre>
+        <button type="submit" style="border-radius: 15px;">Agregar Stock</button>
+    </form>
+</body>
+</html>
