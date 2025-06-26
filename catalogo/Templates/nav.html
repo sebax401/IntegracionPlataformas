@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+.navbar-ferremas {
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    padding: 0;
+    margin-bottom: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 72px;
+}
+
+#logo {
+    height: 54px;
+    width: auto;
+    margin-right: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+#lista, .nav-list a {
+    color: #222;
+    font-size: 1.08rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#lista:hover, .nav-list a:hover {
+    background: #faf9f6;
+    color: #222;
+    text-decoration: underline;
+}
+
+#search-container {
+    margin-left: 24px;
+    display: flex;
+    align-items: center;
+}
+
+#search-input {
+    padding: 7px 14px;
+    border-radius: 6px 0 0 6px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    outline: none;
+}
+
+#search-container button {
+    padding: 7px 16px;
+    border-radius: 0 6px 6px 0;
+    border: none;
+    background: #222;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+#search-container button:hover {
+    background: #555;
+}
+
+@media (max-width: 900px) {
+    .nav-content {
+        flex-direction: column;
+        height: auto;
+        padding: 8px 2vw;
+        gap: 8px;
+    }
+    .nav-list {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    #logo {
+        margin-bottom: 8px;
+    }
+}
+</style>
+</head>
+<body>
+{% load static %}
+<nav class="navbar-ferremas">
+    <div class="nav-content">
+        <img src="{% static 'LogoFerromax.png' %}" alt="LogoFerromax" id="logo">
+        <ul class="nav-list">
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding:8px 18px; color:#222; font-weight:500;">
+                        {{ user.username }}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                        {% if user.email|lower|slice:'-12:' == "@ferromax.cl" %}
+                        <li><a class="dropdown-item" href="{% url 'agregar_stock' %}">Agregar Stock</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{% url 'login' %}" id="lista">Inicio</a></li>
+            {% endif %}
+            <li><a href="{% url 'ListaProductos' %}" id="lista">Productos</a></li>
+            <li><a href="{% url 'carrito' %}" id="lista">Carrito</a></li>
+            <li><a href="{% url 'Menu' %}" id="lista">Menú</a></li>
+        </ul>
+        <div id="search-container">
+            <form method="get" action="{% url 'FiltroProductos' %}">
+                <input type="text" name="nombre" placeholder="Buscar..." value="{{ request.GET.nombre }}" id="search-input">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

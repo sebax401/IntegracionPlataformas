@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body {
+            min-height: 100vh;
+            background: #faf9f6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        #Principal {
+            max-width: 400px;
+            margin: 48px auto 32px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #imagen {
+            width: 110px;
+            height: 110px;
+            display: block;
+            margin: 0 auto 18px auto;
+            border-radius: 16px;
+            object-fit: cover;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        #titulo {
+            color: #222;
+            font-size: 2.2rem;
+            font-weight: 400;
+            font-family: inherit;
+            margin-top: 0;
+            margin-bottom: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        form {
+            width: 100%;
+            margin-top: 0;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #222;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 7px 8px; /* más pequeño */
+            margin-bottom: 12px; /* menos espacio */
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.97rem; /* más pequeño */
+            background: #fff;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border: 1.5px solid #222;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px 0;
+            background: #222;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 12px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            display: block;
+        }
+        button:hover {
+            background: #555;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 8px;
+        }
+        footer {
+            background: #fff; 
+            padding: 20px 0; 
+            margin-top: auto;
+            margin-top: 32px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div id="Principal">
+        <img src="{% static 'LogoFerromax.png' %}" alt="Ferromax" id="imagen">
+        <h1 id="titulo">Ferremas</h1>
+        <form action="" method="POST">
+            <h3 style="text-align:center; margin-bottom: 18px;">Registro de Usuario</h3>
+            {% csrf_token %}
+            <label for="id_username">Nombre de Usuario:</label>
+            <input type="text" name="username" maxlength="150" autofocus="" required="" id="id_username">
+            <label for="id_last_name">Apellido:</label>
+            <input type="text" name="last_name" maxlength="150" required="" id="id_last_name">
+            <label for="id_email">Correo Electrónico:</label>
+            <input type="email" name="email" required="" id="id_email">
+            <label for="id_password1">Contraseña:</label>
+            <input type="password" name="password1" required="" id="id_password1">
+            <label for="id_password2">Confirmar Contraseña:</label>
+            <input type="password" name="password2" required="" id="id_password2">
+            <button type="submit">Registrar</button>
+            <p style="margin-top:12px;">¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a>.</p>
+            {% if form.errors %}
+                <div class="error">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
+<footer >
+    <div class="container">
+        <p>Ferremas - Tu ferretería de confianza</p>
+        <p>Contáctanos: <a href="mailto:contacto@ferremas.cl">contacto@ferremas.cl</a></p>
+    </div>
+    <div class="container">
+        <p>&copy; 2023 Ferremas. Todos los derechos reservados.</p>
+    </div>
+    <div class="container">
+        <p>Desarrollado por: Seba Cabrera :)</p>
+    </div>
+    <div class="container">
+        <p>Versión: 0.10.4</p>
+    </div>
+</footer>

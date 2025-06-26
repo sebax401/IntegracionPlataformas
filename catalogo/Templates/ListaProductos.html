@@ -1,0 +1,216 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <style>
+        body#MenuProductos {
+            min-height: 100vh;
+            background: #faf9f6;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        #PrincipalMenu {
+            max-width: 1200px;
+            margin: 48px auto 32px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #tituloPro {
+            color: #222;
+            font-size: 2.2rem;
+            font-weight: 400;
+            font-family: inherit;
+            margin-top: 0;
+            margin-bottom: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        .card, #tarjeta {
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: none;
+            margin-bottom: 24px;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .btn-primary, .btn-secondary, .btn {
+            width: 100%;
+            padding: 12px 0;
+            background: #222;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            display: block;
+        }
+        .btn-primary:hover, .btn-secondary:hover, .btn:hover {
+            background: #555;
+        }
+        .btn-secondary.disabled, .btn[disabled] {
+            background: #ccc !important;
+            color: #fff !important;
+            cursor: not-allowed;
+        }
+        .card-text.text-danger {
+            color: #d9534f !important;
+        }
+        footer {
+            background: #fff; 
+            padding: 20px 0; 
+            margin-top: auto;
+            margin-top: 32px;
+            text-align: center;
+            color: #888;
+        }
+        #filtro-form {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 24px auto;
+            background: #faf9f6;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 18px 18px 10px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #222;
+        }
+        select, button[type="submit"] {
+            margin-bottom: 12px;
+            padding: 9px 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        select:focus, #filtrar-btn:focus {
+            border: 1.5px solid #222;
+            outline: none;
+        }
+        #filtrar-btn {
+            background: #222;
+            color: #fff;
+            font-weight: 500;
+            transition: background 0.2s;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        #filtrar-btn:hover {
+            background: #555;
+        }
+        @media (max-width: 900px) {
+            #PrincipalMenu {
+                padding: 12px 2vw;
+            }
+            .card, #tarjeta img{
+                margin-bottom: 16px;
+                width: 100%;
+                flex-shrink: 0;
+                min-width: 0;
+            }
+            form {
+                max-width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        {% include 'nav.html' %}
+    </header>
+    <div id="PrincipalMenu">
+        <form method="get" action="{% url 'FiltroProductos' %}" id="filtro-form">
+            <label for="categoria">Filtrar por categoría:</label>
+            <select name="categoria" id="categoria">
+                <option value="">Todas</option>
+                <option value="1">EPP</option>
+                <option value="2">Herramientas</option>
+                <option value="3">Materiales básicos</option>
+            </select>
+            <button type="submit" id="filtrar-btn">Filtrar</button>
+        </form>
+        <h3 id="tituloPro">Productos</h3>
+        <div class="container" id="productos">
+            <div class="row">
+                {% for p in productos %}
+                {% if p.stock > 0 %}
+                <div class="col-md-4">
+                    <div class="card" id="tarjeta">
+                        {% if p.imagen %}
+                            <img src="{{p.imagen.url}}" class="card-img-top" alt="{{p.nombre_producto}}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h3 class="card-title">{{ p.nombre_producto }}</h3>
+                            <p class="card-text">Descripción: {{ p.descripcion }}</p>
+                            <p class="card-text">Precio: ${{p.precio}}</p>
+                            <p class="card-text">Stock: {{p.stock}}</p>
+                            <a href="{% url 'agregar' p.id_producto %}" class="btn btn-primary">Agregar al carrito</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="col-md-4">
+                        <div class="card" id="tarjeta">
+                            {% if p.imagen %}
+                                <img src="{{p.imagen.url}}" class="card-img-top" alt="{{p.nombre_producto}}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h3 class="card-title">{{ p.nombre_producto }}</h3>
+                                <p class="card-text">Descripción: {{ p.descripcion }}</p>
+                                <p class="card-text">Precio: ${{p.precio}}</p>
+                                <p class="card-text">Stock: {{p.stock}}</p>
+                                <p class="card-text text-danger">Agotado</p>
+                                <a href="#" class="btn btn-secondary disabled">Agregar al carrito</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <footer >
+            <div class="container">
+                <p>Ferremas - Tu ferretería de confianza</p>
+                <p>Contáctanos: <a href="mailto:contacto@ferremas.cl">contacto@ferremas.cl</a></p>
+            </div>
+            <div class="container">
+                <p>&copy; 2023 Ferremas. Todos los derechos reservados.</p>
+            </div>
+            <div class="container">
+                <p>Desarrollado por: Seba Cabrera :)</p>
+            </div>
+            <div class="container">
+                <p>Versión: 0.10.4</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

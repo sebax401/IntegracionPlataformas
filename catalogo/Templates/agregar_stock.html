@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Stock</title>
+    <style>
+        body#MenuProductos {
+            min-height: 100vh;
+            background: #faf9f6;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+
+        #PrincipalStock {
+            max-width: 440px;
+            margin: 40px auto 32px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #tituloStock {
+            color: #222;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-top: 0;
+            margin-bottom: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        #agregar-stock-form {
+            width: 100%;
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #222;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.97rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.97rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .form-control:focus,
+        select:focus {
+            border: 1.5px solid #222;
+            outline: none;
+        }
+        #agregar-stock-btn {
+            width: 100%;
+            padding: 12px 0;
+            background: #222;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            display: block;
+        }
+        #agregar-stock-btn:hover {
+            background: #555;
+        }
+        footer {
+            background: #fff; 
+            padding: 20px 0; 
+            margin-top: auto;
+            margin-top: 32px;
+            text-align: center;
+            color: #888;
+        }
+    </style>
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        {% include 'nav.html' %}
+    </header>
+    <div id="PrincipalStock">
+        <h1 id="tituloStock">Agregar Stock</h1>
+        <form method="POST" action="{% url 'agregar_stock' %}" enctype="multipart/form-data" id="agregar-stock-form">
+            {% csrf_token %}
+            <label for="nombre_producto">Nombre Producto</label>
+            <input type="text" name="nombre_producto" id="nombre_producto" class="form-control" required>
+
+            <label for="precio">Precio</label>
+            <input type="number" name="precio" id="precio" class="form-control" required>
+
+            <label for="descripcion">Descripción</label>
+            <input type="text" name="descripcion" id="descripcion" class="form-control" required>
+
+            <label for="tipo">Tipo</label>
+            <select name="tipo" id="tipo" class="form-control" required class="form-control">
+                <option value="0">casco</option>
+                <option value="1">guantes</option>
+                <option value="2">lentes</option>
+                <option value="3">destornillador</option>
+                <option value="4">kit de herramientas</option>
+                <option value="5">lijadora</option>
+                <option value="6">llaves</option>
+                <option value="7">martillo</option>
+                <option value="8">sierra</option>
+                <option value="9">taladro</option>
+                <option value="10">acabados de piso</option>
+                <option value="11">arena</option>
+                <option value="12">barnices</option>
+                <option value="13">cemento</option>
+                <option value="14">ceramica</option>
+                <option value="15">ladrillos</option>
+                <option value="16">pintura</option>
+            </select>
+
+            <label for="categoria">Categoría</label>
+            <select name="categoria" id="categoria" required class="form-control">
+                <option value="1">EPP</option>
+                <option value="2">Herramientas</option>
+                <option value="3">Materiales básicos</option>
+            </select>
+
+            <label for="imagen">Imagen</label>
+            <input type="file" name="imagen" id="imagen">
+
+            <label for="stock">Stock</label>
+            <input type="number" name="stock" id="stock" required class="form-control">
+
+            <button type="submit" id="agregar-stock-btn">Agregar Stock</button>
+        </form>
+    </div>
+    <footer>
+        <div class="container">
+            <p>Ferremas - Tu ferretería de confianza</p>
+            <p>Contáctanos: <a href="mailto:contacto@ferremas.cl">contacto@ferremas.cl</a></p>
+        </div>
+        <div class="container">
+            <p>&copy; 2023 Ferremas. Todos los derechos reservados.</p>
+        </div>
+        <div class="container">
+            <p>Desarrollado por: Seba Cabrera :)</p>
+        </div>
+        <div class="container">
+            <p>Versión: 0.10.4</p>
+        </div>
+    </footer>
+</body>

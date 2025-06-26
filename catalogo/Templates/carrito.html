@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://www.paypal.com/sdk/js?client-id=AR8LOj_kpDI0hAiC8s84dHy_LdkPZ-4c0eUYAKouv3KUXtNko5ZDl-DR9vuUa9Etp4_5AyCbRPonS6qa"></script>
+    <title>Carrito de Compras</title>
+    <style>
+        .btn-danger {
+            background: #d9534f;
+            width: 110px !important;    /* Más ancho */
+            padding: 10px 0 !important;  /* Más alto */
+            font-size: 1.08rem !important;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        .btn-danger:hover {
+            background: #b52a23;
+        }
+        body#MenuProductos {
+            min-height: 100vh;
+            background: #faf9f6;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        #Principal {
+            max-width: 1200px;
+            margin: 48px auto 32px auto;
+            padding: 32px 24px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #tituloPro {
+            color: #222;
+            font-size: 2.2rem;
+            font-weight: 400;
+            font-family: inherit;
+            margin-top: 0;
+            margin-bottom: 18px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        #carrito-flex {
+            display: flex;
+            gap: 32px;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+        }
+        #FormularioDireccion {
+            width: 340px;
+            min-width: 260px;
+            max-width: 400px;
+            background: #f7f6f3;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 24px 18px 10px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+        #FormularioDireccion label {
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #222;
+        }
+        #FormularioDireccion input[type="text"],
+        #FormularioDireccion input[type="email"],
+        #FormularioDireccion input[type="tel"] {
+            width: 100%;
+            padding: 7px 8px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.97rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        #FormularioDireccion input:focus {
+            border: 1.5px solid #222;
+            outline: none;
+        }
+        #productos {
+            flex: 1 1 0;
+            min-width: 320px;
+        }
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            border: none;
+            margin-bottom: 24px;
+            background: #faf9f6;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .btn-primary, .btn-dark, .btn-danger, .btn, .agotado {
+            width: 44px;
+            padding: 8px 0;
+            background: #222;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            display: inline-block;
+        }
+        .btn-primary:hover, .btn-dark:hover, .btn-danger:hover, .btn:hover {
+            background: #555;
+        }
+        .btn-danger {
+            background: #d9534f;
+        }
+        .btn-danger:hover {
+            background: #b52a23;
+        }
+        .agotado, .btn-secondary.disabled, .btn[disabled] {
+            background: #ccc !important;
+            color: #fff !important;
+            cursor: not-allowed;
+        }
+        .acciones-carrito {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .total-card {
+            max-width: 400px;
+            margin: 0 auto 24px auto;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            border: none;
+            background: #fffbe7;
+            padding: 24px 18px;
+            text-align: center;
+        }
+        .total-card h3 {
+            font-size: 2rem;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        .alert-info {
+            margin-top: 24px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+        @media (max-width: 900px) {
+            #Principal {
+                padding: 12px 2vw;
+            }
+            #carrito-flex {
+                flex-direction: column;
+                gap: 18px;
+                align-items: stretch;
+            }
+            #FormularioDireccion, #productos {
+                max-width: 100%;
+                min-width: 0;
+            }
+            .card, .total-card {
+                min-width: 95vw;
+            }
+        }
+    .productos-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 32px;
+        justify-content: flex-start;
+        margin-bottom: 32px;
+    }
+    .producto-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border: none;
+        width: 320px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow 0.2s;
+        min-height: 420px;
+        position: relative;
+    }
+    .producto-card:hover {
+        box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+    }
+    .producto-card img {
+
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px 16px 0 0;
+        background: #f7f6f3;
+    }
+    .producto-card .card-body {
+        width: 100%;
+        padding: 18px 18px 10px 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex: 1;
+    }
+    .producto-card .card-title {
+        font-size: 1.18rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #222;
+    }
+    .producto-card .card-text {
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+        color: #444;
+    }
+    .acciones-carrito {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+        width: 100%;
+    }
+    .btn-primary, .btn-dark, .btn-danger, .btn, .agotado {
+        width: 44px;
+        padding: 8px 0;
+        background: #222;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-bottom: 8px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: background 0.2s;
+        display: inline-block;
+    }
+    .btn-primary:hover, .btn-dark:hover, .btn-danger:hover, .btn:hover {
+        background: #555;
+    }
+    .btn-danger {
+        background: #d9534f;
+    }
+    .btn-danger:hover {
+        background: #b52a23;
+    }
+    .agotado, .btn-secondary.disabled, .btn[disabled] {
+        background: #ccc !important;
+        color: #fff !important;
+        cursor: not-allowed;
+    }
+    @media (max-width: 900px) {
+        .productos-grid {
+            flex-direction: column;
+            gap: 18px;
+        }
+        .producto-card {
+            width: 98vw;
+            min-width: 0;
+        }
+    }
+</style>
+</head>
+<body id="MenuProductos">
+    <header id="navbar">
+        {% include 'nav.html' %}
+    </header>
+    <div id="Principal">
+        <h3 id="tituloPro">Carrito de Compras</h3>
+        <div id="carrito-flex">
+            <div class="container" id="FormularioDireccion">
+                <div id="alerta-direccion" style="display:none; margin-bottom:10px; background: #fffbe7; color: #b8860b; border: 1.5px solid #ffe58f; border-radius: 10px; font-size: 1.08rem; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); padding: 10px 8px;">
+                    <strong>¡Debes ingresar tu dirección!</strong><br>
+                    Por favor, completa la dirección antes de continuar con el pago.
+                </div>
+                <form method="post" action="{% url 'pago_exitoso' %}">
+                    {% csrf_token %}
+                    <label for="nombre" class="form-label">Nombre del destinatario:</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    <label for="telefono" class="form-label">Teléfono de contacto:</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                    <label for="email" class="form-label">Correo electrónico:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                    <label for="ciudad" class="form-label">Ciudad:</label>
+                    <input type="text" class="form-control" id="ciudad" name="ciudad" required>
+                    <label for="provincia" class="form-label">Provincia:</label>
+                    <input type="text" class="form-control" id="provincia" name="provincia" required>
+                    <label for="direccion" class="form-label">Dirección:</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" required>
+                </form>
+            </div>
+        <div class="container" id="productos">
+            {% if request.session.carrito %}
+            <div class="productos-grid">
+                {% for key, item in request.session.carrito.items %}
+                <div class="producto-card">
+                    <img src="{{ item.imagen }}" alt="{{ item.nombre }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.nombre }}</h5>
+                        <p class="card-text">Precio: ${{ item.precio|floatformat:2 }}</p>
+                        <p class="card-text">Cantidad: {{ item.cantidad }}</p>
+                        <div class="acciones-carrito">
+                            {% if item.cantidad < item.stock %}
+                                <a href="{% url 'sumar' key %}" class="btn btn-primary">+</a>
+                            {% else %}
+                                <span class="btn agotado disabled">Agotado</span>
+                            {% endif %}
+                            <a href="{% url 'restar' key %}" class="btn btn-dark">-</a>
+                            <a href="{% url 'eliminar' key %}" class="btn btn-danger">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% if total > 0 %}
+        <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title"><h3>Total: ${{ total }}</h3></h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Formas de Pago:</h6>
+            <div id="paypal-button-container" id="direccion"></div>
+        </div>
+        </div>
+        <div id="paypal-button-container" ></div>
+        {% else %}
+            <h3>Total: ${{total}}</h3>
+        {% endif %}
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    No hay productos en el carrito.
+                </div>
+        {% endif %}
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Ferremas. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+<script>
+
+    // Mostrar alerta si la dirección está vacía al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        const direccionInput = document.getElementById('direccion');
+        const alertaDireccion = document.getElementById('alerta-direccion');
+
+        // Verifica si el campo dirección está vacío al cargar la página
+        if (!isDireccionValida()) {
+            alertaDireccion.style.display = 'block';
+        } else {
+            alertaDireccion.style.display = 'none';
+        }
+
+        // Escucha cambios en el campo dirección
+        direccionInput.addEventListener('input', function() {
+            if (isDireccionValida()) {
+                alertaDireccion.style.display = 'none';
+            } else {
+                alertaDireccion.style.display = 'block';
+            }
+        });
+    });
+
+    // Función para validar si la dirección está completa
+    function isDireccionValida() {
+        const direccion = document.getElementById('direccion').value.trim();
+        return direccion.length > 0;
+    }
+
+    paypal.Buttons({
+        onInit: function(data, actions) {
+            // Deshabilita el botón al inicio si la dirección está vacía
+            if (!isDireccionValida()) {
+                actions.disable();
+            }
+            // Escucha cambios en el campo dirección
+            document.getElementById('direccion').addEventListener('input', function() {
+                if (isDireccionValida()) {
+                    actions.enable();
+                } else {
+                    actions.disable();
+                }
+            });
+        },
+        onClick: function(data, actions) {
+            // Valida nuevamente antes de continuar
+            if (!isDireccionValida()) {
+                alert('Por favor, ingresa una dirección antes de continuar con el pago.');
+                return actions.reject();
+            }
+            return actions.resolve();
+        },
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: '{{ total }}'
+                    },
+                    description: 'Compra Ferremas'
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                let payerName = details.payer.name.given_name;
+                window.location.href = "{% url 'pago_exitoso' %}" + "?payerName=" + encodeURIComponent(payerName);
+            });
+        },
+        onCancel: function(data) {
+            console.log('Pago cancelado', data);
+        },
+        onError: function(err) {
+            console.error('Error en el pago', err);
+        }
+    }).render('#paypal-button-container');
+</script>
+</body>
+</html>
